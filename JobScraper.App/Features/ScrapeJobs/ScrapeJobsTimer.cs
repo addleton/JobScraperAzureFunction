@@ -4,8 +4,17 @@ namespace JobScraper.App.Features.ScrapeJobs;
 
 public class ScrapeJobsTimer
 {
-    public static void RunTimer([TimerTrigger("0 0 */4 * * *")] TimerInfo timerInfo, FunctionContext context)
+    private readonly JobBoardsClient _jobBoardsClient;
+
+    public ScrapeJobsTimer(JobBoardsClient jobBoardsClient)
     {
-        throw new NotImplementedException();
+        _jobBoardsClient = jobBoardsClient;
+    }
+
+    [Function(nameof(ScrapeJobsTimer))]
+    public async Task RunTimer([TimerTrigger("0 0 */4 * * *", RunOnStartup = true)] TimerInfo timerInfo,
+        FunctionContext context)
+    {
+        var result = await _jobBoardsClient.GetReedJobPostings();
     }
 }
