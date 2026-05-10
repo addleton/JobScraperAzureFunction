@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "JobScraper.App": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7126",
+      "launchBrowser": false
+    }
+  }
+}
