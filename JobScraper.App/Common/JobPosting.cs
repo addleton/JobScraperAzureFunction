@@ -9,6 +9,6 @@ public class JobPosting
     [Required] [MaxLength(10000)] public required string Description { get; init; }
     [Required] [MaxLength(100)] public required string Company { get; init; }
     [Required] [MaxLength(1000)] public required string Url { get; init; }
-    public int Salary { get; init; }
+    public decimal? Salary { get; init; }
     public bool EmailSent { get; init; }
 }
