@@ -1,4 +1,4 @@
-﻿namespace JobScraper.App.Features.ScrapeJobs;
+﻿namespace JobScraper.App.Features.ScrapeReedJobs;
 
 public record ReedJobDto
 {
