@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Text;
 using JobScraper.App.Common;
+using JobScraper.App.Features.Extensions;
 using JobScraper.App.Features.Services;
 
 namespace JobScraper.App.Features.ScrapeReedJobs;
@@ -41,25 +42,23 @@ public class ReedApiClient
         byte[] bytes = Encoding.ASCII.GetBytes($"{_reedApiKey}:");
         string base64String = Convert.ToBase64String(bytes);
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64String);
-        ReedSearchResultDto? result = await _client.GetFromJsonAsync<ReedSearchResultDto>(_reedJobsLocalSearch);
+
+        HttpResponseMessage response = await _client.GetAsync(_reedJobsLocalSearch);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string errorContent = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Reed API Error: {response.StatusCode}. Details: {errorContent}");
+        }
+
+        ReedSearchResultDto? result = await response.Content.ReadFromJsonAsync<ReedSearchResultDto>();
 
         if (result is null)
         {
             return [];
         }
 
-        List<JobPosting> jobs = result.Results.Select(job => new JobPosting
-        {
-            JobId = job.JobId.ToString(),
-            Source = "Reed",
-            Title = job.JobTitle,
-            Description = job.JobDescription,
-            Company = job.EmployerName,
-            Url = job.JobUrl,
-            Location = job.LocationName,
-            Salary = job.MinimumSalary ?? 0,
-            EmailSent = false
-        }).ToList();
+        List<JobPosting> jobs = result.Results.Select(job => job.ToModel()).ToList();
 
         return jobs;
     }
@@ -69,24 +68,23 @@ public class ReedApiClient
         byte[] bytes = Encoding.ASCII.GetBytes($"{_reedApiKey}:");
         string base64String = Convert.ToBase64String(bytes);
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64String);
-        ReedSearchResultDto? result = await _client.GetFromJsonAsync<ReedSearchResultDto>(_reedJobsRemoteSearch);
+
+        HttpResponseMessage response = await _client.GetAsync(_reedJobsRemoteSearch);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string errorContent = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Reed API Error: {response.StatusCode}. Details: {errorContent}");
+        }
+
+        ReedSearchResultDto? result = await response.Content.ReadFromJsonAsync<ReedSearchResultDto>();
 
         if (result is null)
         {
             return [];
         }
 
-        List<JobPosting> jobs = result.Results.Select(job => new JobPosting
-        {
-            JobId = job.JobId.ToString(),
-            Source = "Reed",
-            Title = job.JobTitle,
-            Description = job.JobDescription,
-            Company = job.EmployerName,
-            Url = job.JobUrl,
-            Salary = job.MinimumSalary ?? 0,
-            EmailSent = false
-        }).ToList();
+        List<JobPosting> jobs = result.Results.Select(job => job.ToModel()).ToList();
 
         return jobs;
     }
