@@ -16,7 +16,7 @@ public class ScrapeReedJobsTimer
     }
 
     [Function(nameof(ScrapeReedJobsTimer))]
-    public async Task RunTimer([TimerTrigger("0 0 */4 * * *", RunOnStartup = true)] TimerInfo timerInfo,
+    public async Task RunTimer([TimerTrigger("0 0 */4 * * *")] TimerInfo timerInfo,
         FunctionContext context)
     {
         List<JobPosting> jobs = await _reedApiClient.GetAllReedJobPostings();
