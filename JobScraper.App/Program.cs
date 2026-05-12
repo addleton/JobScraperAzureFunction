@@ -1,5 +1,6 @@
 using JobScraper.App.Common;
 using JobScraper.App.Features.Repository;
+using JobScraper.App.Features.ScrapeAdzunaJobs;
 using JobScraper.App.Features.ScrapeReedJobs;
 using JobScraper.App.Features.Services;
 using Microsoft.Azure.Functions.Worker;
@@ -25,6 +26,7 @@ builder.Services
         options.UseSqlServer(connectionString);
     })
     .AddSingleton<ReedApiClient>()
+    .AddSingleton<AdzunaApiClient>()
     .AddSingleton<JobFilterService>()
     .AddScoped<JobRepository>();
 
