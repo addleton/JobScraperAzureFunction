@@ -42,8 +42,7 @@ public class JobRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            return null;
+            return [];
         }
     }
 
