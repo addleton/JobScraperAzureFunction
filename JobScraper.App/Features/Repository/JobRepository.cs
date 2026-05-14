@@ -37,8 +37,17 @@ public class JobRepository
         }
     }
 
-    public async Task<List<JobPosting>> GetAllJobsAsync()
+    public async Task<List<JobPosting>> GetAllJobsWithoutEmailSentAsync()
     {
-        return await _context.JobPostings.ToListAsync();
+        try
+        {
+            return await _context.JobPostings.Where(job => !job.EmailSent).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
+    }
     }
 }
