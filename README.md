@@ -40,7 +40,7 @@ Create a `local.settings.json` file in the `JobScraper.App` root directory. **No
         "SqlConnectionString": "Server=(localdb)\\mssqllocaldb;Database=JobScraperLocal;Trusted_Connection=True",
         "ReedApiKey": "YOUR_REED_API_KEY",
         "AdzunaAppId": "YOUR_ADZUNA_APP_ID",
-        "AdzunaAppKey": "YOUR_ADZUNA_APP_KEY",
+        "AdzunaApiKey": "YOUR_ADZUNA_APP_KEY",
         "AzureCommConnectionString": "endpoint=https://your-service.communication.azure.com/;accesskey=...",
         "AzureEmail": "donotreply@xxxxxxxxxxxx.azurecomm.net",
         "PersonalEmail": "your.email@gmail.com"
