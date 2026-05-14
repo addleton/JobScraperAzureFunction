@@ -4,6 +4,7 @@ using System.Text;
 using JobScraper.App.Common;
 using JobScraper.App.Features.Extensions;
 using JobScraper.App.Features.Services;
+using Microsoft.Extensions.Logging;
 
 namespace JobScraper.App.Features.ScrapeReedJobs;
 
@@ -11,6 +12,7 @@ public class ReedApiClient
 {
     private readonly HttpClient _client;
     private readonly JobFilterService _jobFilter;
+    private readonly ILogger<ReedApiClient> _logger;
 
     private readonly string _reedApiKey = Environment.GetEnvironmentVariable("ReedApiKey") ??
                                           throw new NullReferenceException("Reed API Key was not found");
@@ -20,10 +22,12 @@ public class ReedApiClient
 
     private readonly string _searchTerm = Uri.EscapeDataString("C# Developer");
 
-    public ReedApiClient(IHttpClientFactory httpClientFactory, JobFilterService jobFilter)
+    public ReedApiClient(IHttpClientFactory httpClientFactory, JobFilterService jobFilter,
+        ILogger<ReedApiClient> logger)
     {
         _client = httpClientFactory.CreateClient();
         _jobFilter = jobFilter;
+        _logger = logger;
 
         _reedJobsLocalSearch =
             $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&locationName=S804JJ&distancefromlocation=30&minimumSalary=35000";
@@ -38,7 +42,7 @@ public class ReedApiClient
         return localJobs.UnionBy(filteredJobs, job => job.JobId).ToList();
     }
 
-    public async Task<List<JobPosting>> GetLocalReedJobPostings()
+    private async Task<List<JobPosting>> GetLocalReedJobPostings()
     {
         byte[] bytes = Encoding.ASCII.GetBytes($"{_reedApiKey}:");
         string base64String = Convert.ToBase64String(bytes);
@@ -49,6 +53,8 @@ public class ReedApiClient
         if (!response.IsSuccessStatusCode)
         {
             string errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Reed API Error: {StatusCode}. Details: {ErrorMessage}", response.StatusCode,
+                errorContent);
             throw new Exception($"Reed API Error: {response.StatusCode}. Details: {errorContent}");
         }
 
@@ -72,6 +78,8 @@ public class ReedApiClient
         if (!response.IsSuccessStatusCode)
         {
             string errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Reed API Error: {StatusCode}. Details: {ErrorMessage}", response.StatusCode,
+                errorContent);
             throw new Exception($"Reed API Error: {response.StatusCode}. Details: {errorContent}");
         }
 

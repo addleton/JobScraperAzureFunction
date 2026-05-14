@@ -1,15 +1,18 @@
 ﻿using JobScraper.App.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JobScraper.App.Features.Repository;
 
 public class JobRepository
 {
     private readonly JobDbContext _context;
+    private readonly ILogger<JobRepository> _logger;
 
-    public JobRepository(JobDbContext context)
+    public JobRepository(JobDbContext context, ILogger<JobRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task SaveJobsAsync(List<JobPosting> jobs)
@@ -29,6 +32,7 @@ public class JobRepository
 
         if (newJobs.Count > 0)
         {
+            _logger.LogInformation("Adding {Count} jobs for job postings", newJobs.Count);
             await _context.JobPostings.AddRangeAsync(newJobs);
             await _context.SaveChangesAsync();
         }
@@ -42,6 +46,7 @@ public class JobRepository
         }
         catch (Exception e)
         {
+            _logger.LogError(e, "Error getting jobs for job postings");
             return [];
         }
     }
@@ -52,6 +57,7 @@ public class JobRepository
 
         foreach (int id in jobIds)
         {
+            _logger.LogInformation("Setting email sent to true for job {Id}", id);
             JobPosting? job = await _context.JobPostings.FirstOrDefaultAsync(job => job.Id == id);
             job?.EmailSent = true;
         }
