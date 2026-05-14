@@ -24,7 +24,7 @@ builder.Services
                                   ??
                                   "Server=(localdb)\\mssqllocaldb;Database=JobScraperLocal;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        options.UseSqlServer(connectionString);
+        options.UseSqlServer(connectionString, sqlOptions => { sqlOptions.EnableRetryOnFailure(); });
     })
     .AddSingleton<ReedApiClient>()
     .AddSingleton<AdzunaApiClient>()
