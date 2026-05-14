@@ -2,6 +2,7 @@
 using JobScraper.App.Common;
 using JobScraper.App.Features.Extensions;
 using JobScraper.App.Features.Services;
+using Microsoft.Extensions.Logging;
 
 namespace JobScraper.App.Features.ScrapeAdzunaJobs;
 
@@ -11,12 +12,15 @@ public class AdzunaApiClient
     private readonly JobFilterService _filter;
     private readonly string _localAdzunaSearch;
     private readonly string _remoteAdzunaSearch;
+    private readonly ILogger<AdzunaApiClient> _logger;
 
 
-    public AdzunaApiClient(IHttpClientFactory httpClientFactory, JobFilterService filter)
+    public AdzunaApiClient(IHttpClientFactory httpClientFactory, JobFilterService filter,
+        ILogger<AdzunaApiClient> logger)
     {
         _client = httpClientFactory.CreateClient();
         _filter = filter;
+        _logger = logger;
 
         string appId = Environment.GetEnvironmentVariable("AdzunaAppId") ??
                        throw new NullReferenceException("AdzunaAppId not found");
@@ -43,6 +47,8 @@ public class AdzunaApiClient
         if (!response.IsSuccessStatusCode)
         {
             string errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Adzuna API Error: {StatusCode}. Details: {ErrorMessage}", response.StatusCode,
+                errorContent);
             throw new Exception($"Adzuna API Error: {response.StatusCode}. Details: {errorContent}");
         }
 
@@ -65,6 +71,8 @@ public class AdzunaApiClient
         if (!response.IsSuccessStatusCode)
         {
             string errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Adzuna API Error: {StatusCode}. Details: {ErrorMessage}", response.StatusCode,
+                errorContent);
             throw new Exception($"Adzuna API Error: {response.StatusCode}. Details: {errorContent}");
         }
 
