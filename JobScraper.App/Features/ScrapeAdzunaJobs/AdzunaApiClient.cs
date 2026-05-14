@@ -1,7 +1,7 @@
-﻿using JobScraper.App.Common;
+﻿using System.Net.Http.Json;
+using JobScraper.App.Common;
 using JobScraper.App.Features.Extensions;
 using JobScraper.App.Features.Services;
-using System.Net.Http.Json;
 
 namespace JobScraper.App.Features.ScrapeAdzunaJobs;
 
@@ -24,8 +24,8 @@ public class AdzunaApiClient
                         throw new NullReferenceException("AdzunaApiKey not found");
         _localAdzunaSearch =
             $"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={appId}&app_key={apiKey}&results_per_page=100&what=C%23%20Developer&where=Worksop&distance=40&max_days_old=7&salary_min=35000&salary_include_unknown=1";
-        _remoteAdzunaSearch = $"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={appId}&app_key={apiKey}&results_per_page=100&what=C%23%20Developer&max_days_old=7&salary_min=35000&salary_include_unknown=1";
-
+        _remoteAdzunaSearch =
+            $"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={appId}&app_key={apiKey}&results_per_page=100&what=C%23%20Developer&max_days_old=7&salary_min=35000&salary_include_unknown=1";
     }
 
     public async Task<List<JobPosting>> GetAdzunaJobPostings()
@@ -47,16 +47,11 @@ public class AdzunaApiClient
         }
 
         if (response.Content.Headers.ContentType?.CharSet == "utf8")
-        {
             response.Content.Headers.ContentType.CharSet = "utf-8";
-        }
 
         AdzunaSearchResultDto? result = await response.Content.ReadFromJsonAsync<AdzunaSearchResultDto>();
 
-        if (result is null)
-        {
-            return [];
-        }
+        if (result is null) return [];
 
         List<JobPosting> jobs = result.Results.Select(job => job.ToModel()).ToList();
 
@@ -74,16 +69,11 @@ public class AdzunaApiClient
         }
 
         if (response.Content.Headers.ContentType?.CharSet == "utf8")
-        {
             response.Content.Headers.ContentType.CharSet = "utf-8";
-        }
 
         AdzunaSearchResultDto? result = await response.Content.ReadFromJsonAsync<AdzunaSearchResultDto>();
 
-        if (result is null)
-        {
-            return [];
-        }
+        if (result is null) return [];
 
         List<JobPosting> jobs = result.Results.Select(job => job.ToModel()).ToList();
 

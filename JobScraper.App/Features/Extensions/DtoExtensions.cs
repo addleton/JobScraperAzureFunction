@@ -1,9 +1,6 @@
 ﻿using JobScraper.App.Common;
 using JobScraper.App.Features.ScrapeAdzunaJobs;
 using JobScraper.App.Features.ScrapeReedJobs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JobScraper.App.Features.Extensions;
 
@@ -11,7 +8,7 @@ public static class DtoExtensions
 {
     public static JobPosting ToModel(this AdzunaJobDto dto)
     {
-        return new JobPosting()
+        return new JobPosting
         {
             JobId = dto.Id,
             Source = "Adzuna",
@@ -27,7 +24,7 @@ public static class DtoExtensions
 
     public static JobPosting ToModel(this ReedJobDto dto)
     {
-        return new JobPosting()
+        return new JobPosting
         {
             JobId = dto.JobId.ToString(),
             Source = "Reed",

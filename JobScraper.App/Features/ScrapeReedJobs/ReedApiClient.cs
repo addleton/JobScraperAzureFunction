@@ -15,9 +15,10 @@ public class ReedApiClient
     private readonly string _reedApiKey = Environment.GetEnvironmentVariable("ReedApiKey") ??
                                           throw new NullReferenceException("Reed API Key was not found");
 
-    private readonly string _searchTerm = Uri.EscapeDataString("C# Developer");
     private readonly string _reedJobsLocalSearch;
     private readonly string _reedJobsRemoteSearch;
+
+    private readonly string _searchTerm = Uri.EscapeDataString("C# Developer");
 
     public ReedApiClient(IHttpClientFactory httpClientFactory, JobFilterService jobFilter)
     {
@@ -53,10 +54,7 @@ public class ReedApiClient
 
         ReedSearchResultDto? result = await response.Content.ReadFromJsonAsync<ReedSearchResultDto>();
 
-        if (result is null)
-        {
-            return [];
-        }
+        if (result is null) return [];
 
         List<JobPosting> jobs = result.Results.Select(job => job.ToModel()).ToList();
 
@@ -79,10 +77,7 @@ public class ReedApiClient
 
         ReedSearchResultDto? result = await response.Content.ReadFromJsonAsync<ReedSearchResultDto>();
 
-        if (result is null)
-        {
-            return [];
-        }
+        if (result is null) return [];
 
         List<JobPosting> jobs = result.Results.Select(job => job.ToModel()).ToList();
 

@@ -22,10 +22,7 @@ public class ScrapeAdzunaJobsTimer
     {
         List<JobPosting> jobs = await _adzunaApiClient.GetAdzunaJobPostings();
 
-        if (jobs.Count < 1)
-        {
-            return;
-        }
+        if (jobs.Count < 1) return;
 
         await _jobRepository.SaveJobsAsync(jobs);
     }

@@ -21,10 +21,7 @@ public class ScrapeReedJobsTimer
     {
         List<JobPosting> jobs = await _reedApiClient.GetAllReedJobPostings();
 
-        if (jobs.Count < 1)
-        {
-            return;
-        }
+        if (jobs.Count < 1) return;
 
         await _repository.SaveJobsAsync(jobs);
     }
