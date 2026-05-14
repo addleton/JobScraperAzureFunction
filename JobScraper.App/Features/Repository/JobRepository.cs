@@ -1,8 +1,5 @@
 ﻿using JobScraper.App.Common;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JobScraper.App.Features.Repository;
 
@@ -49,5 +46,17 @@ public class JobRepository
             return null;
         }
     }
+
+    public async Task SetEmailSentTrueAsync(List<int> jobIds)
+    {
+        List<JobPosting> jobs = [];
+
+        foreach (int id in jobIds)
+        {
+            JobPosting? job = await _context.JobPostings.FirstOrDefaultAsync(job => job.Id == id);
+            job?.EmailSent = true;
+        }
+
+        await _context.SaveChangesAsync();
     }
 }
