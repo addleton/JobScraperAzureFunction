@@ -13,5 +13,5 @@ public class JobPosting
     [Required] [MaxLength(1000)] public required string Url { get; init; }
     [MaxLength(100)] public string? Location { get; init; }
     public decimal? Salary { get; init; }
-    public bool EmailSent { get; init; }
+    public bool EmailSent { get; set; }
 }
