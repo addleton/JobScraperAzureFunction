@@ -30,8 +30,9 @@ public class ReedApiClient
         _logger = logger;
 
         _reedJobsLocalSearch =
-            $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&locationName=S804JJ&distancefromlocation=30&minimumSalary=35000";
-        _reedJobsRemoteSearch = $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&minimumSalary=35000";
+            $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&locationName=S804JJ&distancefromlocation=30&minimumSalary=35000&resultsToTake=100";
+        _reedJobsRemoteSearch =
+            $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&minimumSalary=35000&resultsToTake=100";
     }
 
     public async Task<List<JobPosting>> GetAllReedJobPostings()
@@ -46,9 +47,9 @@ public class ReedApiClient
     {
         byte[] bytes = Encoding.ASCII.GetBytes($"{_reedApiKey}:");
         string base64String = Convert.ToBase64String(bytes);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64String);
-
-        HttpResponseMessage response = await _client.GetAsync(_reedJobsLocalSearch);
+        HttpRequestMessage request = new(HttpMethod.Get, _reedJobsLocalSearch);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64String);
+        HttpResponseMessage response = await _client.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -71,9 +72,9 @@ public class ReedApiClient
     {
         byte[] bytes = Encoding.ASCII.GetBytes($"{_reedApiKey}:");
         string base64String = Convert.ToBase64String(bytes);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64String);
-
-        HttpResponseMessage response = await _client.GetAsync(_reedJobsRemoteSearch);
+        HttpRequestMessage request = new(HttpMethod.Get, _reedJobsRemoteSearch);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64String);
+        HttpResponseMessage response = await _client.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {

@@ -29,6 +29,7 @@ public class ScrapeReedJobsTimer
         if (jobs.Count < 1)
         {
             _logger.LogInformation("No Reed jobs found.");
+            return;
         }
 
         _logger.LogInformation("Found {Count} Reed jobs", jobs.Count);
