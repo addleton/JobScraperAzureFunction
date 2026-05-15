@@ -30,8 +30,9 @@ public class ReedApiClient
         _logger = logger;
 
         _reedJobsLocalSearch =
-            $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&locationName=S804JJ&distancefromlocation=30&minimumSalary=35000";
-        _reedJobsRemoteSearch = $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&minimumSalary=35000";
+            $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&locationName=S804JJ&distancefromlocation=30&minimumSalary=35000&resultsToTake=100";
+        _reedJobsRemoteSearch =
+            $"https://www.reed.co.uk/api/1.0/search?keywords={_searchTerm}&minimumSalary=35000&resultsToTake=100";
     }
 
     public async Task<List<JobPosting>> GetAllReedJobPostings()

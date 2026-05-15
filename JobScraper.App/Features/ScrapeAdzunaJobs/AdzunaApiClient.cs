@@ -27,9 +27,9 @@ public class AdzunaApiClient
         string apiKey = Environment.GetEnvironmentVariable("AdzunaApiKey") ??
                         throw new NullReferenceException("AdzunaApiKey not found");
         _localAdzunaSearch =
-            $"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={appId}&app_key={apiKey}&results_per_page=100&what=C%23%20Developer&where=Worksop&distance=40&max_days_old=7&salary_min=35000&salary_include_unknown=1";
+            $"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={appId}&app_key={apiKey}&results_per_page=100&what=C%23%20Developer&where=Worksop&distance=40&max_days_old=1&salary_min=35000&salary_include_unknown=1&sort_by=date";
         _remoteAdzunaSearch =
-            $"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={appId}&app_key={apiKey}&results_per_page=100&what=C%23%20Developer&max_days_old=7&salary_min=35000&salary_include_unknown=1";
+            $"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={appId}&app_key={apiKey}&results_per_page=100&what=C%23%20Developer&max_days_old=1&salary_min=35000&salary_include_unknown=1&sort_by=date";
     }
 
     public async Task<List<JobPosting>> GetAdzunaJobPostings()
