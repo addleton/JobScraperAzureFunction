@@ -21,7 +21,7 @@ public class SendEmailTimer
     }
 
     [Function(nameof(SendEmailTimer))]
-    public async Task RunTimer([TimerTrigger("0 0 6/24 * * *", RunOnStartup = true)] TimerInfo timerInfo,
+    public async Task RunTimer([TimerTrigger("0 0 6/24 * * *")] TimerInfo timerInfo,
         FunctionContext context)
     {
         _logger.LogInformation("Starting Email Sender at {Time}:", DateTimeOffset.Now);
