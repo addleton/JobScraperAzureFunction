@@ -1,16 +1,20 @@
 ﻿using Azure;
 using Azure.Communication.Email;
+using Microsoft.Extensions.Logging;
 
 namespace JobScraper.App.Features.SendEmail;
 
 public class EmailSender
 {
+    private readonly ILogger<EmailSender> _logger;
+
     private readonly string _connectionString;
     private readonly string _emailRecipient;
     private readonly string _emailSender;
 
-    public EmailSender()
+    public EmailSender(ILogger<EmailSender> logger)
     {
+        _logger = logger;
         _connectionString = Environment.GetEnvironmentVariable("AzureCommConnectionString") ??
                             throw new NullReferenceException("Azure Email Connection string not found");
         _emailSender = Environment.GetEnvironmentVariable("AzureEmail") ??
@@ -37,7 +41,8 @@ public class EmailSender
         }
         catch (Exception ex)
         {
-            throw new Exception("An error occured while sending email", ex);
+            _logger.LogError("An error occured while sending email: {Exception}", ex);
+            return false;
         }
     }
 }
