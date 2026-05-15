@@ -46,9 +46,9 @@ public class ReedApiClient
     {
         byte[] bytes = Encoding.ASCII.GetBytes($"{_reedApiKey}:");
         string base64String = Convert.ToBase64String(bytes);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64String);
-
-        HttpResponseMessage response = await _client.GetAsync(_reedJobsLocalSearch);
+        HttpRequestMessage request = new(HttpMethod.Get, _reedJobsLocalSearch);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64String);
+        HttpResponseMessage response = await _client.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -71,9 +71,9 @@ public class ReedApiClient
     {
         byte[] bytes = Encoding.ASCII.GetBytes($"{_reedApiKey}:");
         string base64String = Convert.ToBase64String(bytes);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64String);
-
-        HttpResponseMessage response = await _client.GetAsync(_reedJobsRemoteSearch);
+        HttpRequestMessage request = new(HttpMethod.Get, _reedJobsRemoteSearch);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64String);
+        HttpResponseMessage response = await _client.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {
