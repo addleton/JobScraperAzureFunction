@@ -53,13 +53,12 @@ public class JobRepository
 
     public async Task SetEmailSentTrueAsync(List<int> jobIds)
     {
-        List<JobPosting> jobs = [];
+        List<JobPosting> jobs = await _context.JobPostings.Where((j => jobIds.Contains(j.Id))).ToListAsync();
 
-        foreach (int id in jobIds)
+        foreach (JobPosting job in jobs)
         {
-            _logger.LogInformation("Setting email sent to true for job {Id}", id);
-            JobPosting? job = await _context.JobPostings.FirstOrDefaultAsync(job => job.Id == id);
-            job?.EmailSent = true;
+            _logger.LogInformation("Setting email sent to true for job {Id}", job.Id);
+            job.EmailSent = true;
         }
 
         await _context.SaveChangesAsync();
